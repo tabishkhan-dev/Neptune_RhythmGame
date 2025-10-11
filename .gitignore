@@ -1,0 +1,46 @@
+# --- Unity (keep repo small & portable) ---
+/Library/
+/Temp/
+/Obj/
+/Logs/
+/UserSettings/
+/Build/
+/Builds/
+/MemoryCaptures/
+/Recordings/
+/Crashes/
+/Artifacts/
+/DerivedDataCache/
+/sysinfo.log
+
+# IDE / tooling
+/.vs/
+/.vscode/
+/.idea/
+/*.code-workspace
+
+# Unity-generated solution/project files
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+
+# TextMesh Pro auto artifacts
+/[Aa]ssets/TextMesh*/*/Resources/*
+
+# JetBrains Rider
+/.Rider*
+
+# Gradle / Android
+/.gradle/
+/ExportedObj/
+/Logs/CloudDiag.log
+
+# macOS/Windows noise
+.DS_Store
+Thumbs.db

@@ -1,0 +1,32 @@
+# Normalize line endings for text files
+* text=auto
+
+# Treat typical Unity asset binaries as binary (no EOL changes)
+*.png  -text
+*.jpg  -text
+*.jpeg -text
+*.psd  -text
+*.tga  -text
+*.gif  -text
+*.bmp  -text
+*.hdr  -text
+*.exr  -text
+
+*.wav  -text
+*.mp3  -text
+*.ogg  -text
+
+*.fbx  -text
+*.anim -text
+*.controller -text
+*.prefab -text
+*.unity -text
+*.mat  -text
+*.asset -text
+*.bytes -text
+
+*.ttf  -text
+*.otf  -text
+
+# Ensure .sh stays LF (if any)
+*.sh text eol=lf
