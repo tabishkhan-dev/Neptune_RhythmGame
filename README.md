@@ -52,9 +52,7 @@ The project follows a **modular architecture** with separated responsibilities:
 3. Press **Play** in the Editor.  
 4. Tap/click to the beat!  
 
-##  Notes & Improvements
-- The BPM is fixed at **120** for simplicity.  
-- Latency compensation of **–100 ms** ensures realistic PC response.  
+##  Improvements  
 - Possible future improvements:
   - Waveform-based beat detection.  
   - Visual hit effects & combo counter.  
