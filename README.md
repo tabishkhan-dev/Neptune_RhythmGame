@@ -1,4 +1,4 @@
-# Neptune Rhythm Game
+NEPTUNE RHYTHM GAME
 
 A minimal rhythm-based Unity game built as part of the Neptune Challenge.  
 Tap or click in sync with the beats of the background track to score **Perfect**, **Good**, or **Miss** hits!
@@ -15,11 +15,11 @@ Scoring summary display at game end.
 
 ## Unity Project Details
 | Parameter | Value |
-|------------|--------|
-| **Unity Version** | 6000.0.47f1 (Unity 6 LTS) |
-| **Render Pipeline** | Universal Render Pipeline (URP) |
-| **Platform Tested** | Windows PC |
-| **Packages Used** | TextMeshPro, URP Core |
+
+**Unity Version** 6000.0.47f1 (Unity 6 LTS) |
+**Render Pipeline** Universal Render Pipeline (URP) |
+ **Platform Tested**  Windows PC
+**Packages Used** TextMeshPro, URP Core
 
 ---
 
