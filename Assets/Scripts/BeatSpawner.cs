@@ -1,56 +1,72 @@
 using UnityEngine;
+using System.Collections;
 
 public class BeatSpawner : MonoBehaviour
 {
     [Header("References")]
-    public AudioManager audioManager;   // link to your AudioManager
-    public GameObject beatPrefab;       // visual object to spawn
-    public Transform spawnPoint;        // where to spawn it
+    public AudioSource musicSource;        
+    public GameObject beatPrefab;         
+    public Transform spawnPoint;           // Assign SpawnPoint
+    public Transform targetPoint;          // Assign Main Camera 
 
-    private float nextBeatTime;
-    private bool songEnded = false;
+    [Header("Beat Settings")]
+    public float spawnInterval = 0.5f;     // For 120 BPM
+    public float beatSpeed = 5f;           // Units per second (movement speed)
+
+    private bool gameOverTriggered = false;
 
     void Start()
     {
-        if (audioManager == null)
-        {
-            Debug.LogError("❌ BeatSpawner: AudioManager reference missing!");
-            return;
-        }
-
-        nextBeatTime = audioManager.SecondsPerBeat;
-        songEnded = false;
+        StartCoroutine(SpawnBeats());
     }
 
-    void Update()
+    IEnumerator SpawnBeats()
     {
-        if (audioManager == null)
-            return;
+        float travelTime = Vector3.Distance(spawnPoint.position, targetPoint.position) / beatSpeed;
 
-        AudioSource src = audioManager.GetComponent<AudioSource>();
-
-        // 🛑 Stop spawning if the song ended
-        if (!songEnded && !src.isPlaying)
-        {
-            songEnded = true;
-            Debug.Log("🎵 Song ended — stopping beat spawns.");
-            return;
-        }
-
-        // If still playing, spawn on beat
-        float songTime = audioManager.GetAccurateSongTime();
-        if (!songEnded && songTime >= nextBeatTime)
+        // Pre-spawn beats before music starts
+        float elapsed = 0f;
+        while (elapsed < travelTime)
         {
             SpawnBeat();
-            nextBeatTime += audioManager.SecondsPerBeat;
+            yield return new WaitForSeconds(spawnInterval);
+            elapsed += spawnInterval;
         }
+
+        // Start music playback
+        musicSource.Play();
+
+        // Spawn beats while music is still playing
+        while (musicSource.isPlaying)
+        {
+            float remaining = musicSource.clip.length - musicSource.time;
+            if (remaining <= spawnInterval * 1.1f)
+                break; // stop spawning early so the last beat aligns properly
+
+            SpawnBeat();
+            yield return new WaitForSeconds(spawnInterval);
+        }
+
+        // Wait until all beats are destroyed
+        yield return new WaitUntil(() => GameObject.FindGameObjectsWithTag("Beat").Length == 0);
+
+        // Wait for a short cinematic pause
+        yield return new WaitForSeconds(4f);
+
+        TriggerGameOver();
     }
 
     void SpawnBeat()
     {
-        if (beatPrefab != null && spawnPoint != null)
-        {
-            Instantiate(beatPrefab, spawnPoint.position, Quaternion.identity);
-        }
+        Instantiate(beatPrefab, spawnPoint.position, Quaternion.identity);
+    }
+
+    void TriggerGameOver()
+    {
+        if (gameOverTriggered) return;
+        gameOverTriggered = true;
+
+        
+        Debug.Log("Game Over Triggered — Final Score Displayed!");
     }
 }

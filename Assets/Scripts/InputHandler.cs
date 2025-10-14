@@ -1,9 +1,10 @@
 using UnityEngine;
+using System.Collections;
 
 public class InputHandler : MonoBehaviour
 {
-    public AudioManager audioManager;   // Reference to AudioManager
-    public FeedbackUI feedbackUI;       // Reference to Feedback UI (on-screen text)
+    public AudioManager audioManager;
+    public FeedbackUI feedbackUI;
 
     private int perfectCount = 0;
     private int goodCount = 0;
@@ -11,82 +12,99 @@ public class InputHandler : MonoBehaviour
     private int totalScore = 0;
 
     private bool songEnded = false;
+    private int lastBeatIndex = -1;
 
-    private void Update()
+    void OnEnable() => AudioManager.OnMusicEnded += HandleMusicEnded;
+    void OnDisable() => AudioManager.OnMusicEnded -= HandleMusicEnded;
+
+    void Update()
     {
-        if (audioManager == null)
+        if (audioManager == null || songEnded)
             return;
 
-        AudioSource src = audioManager.GetComponent<AudioSource>();
-
-        // Check if song has ended
-        if (!songEnded && !src.isPlaying)
-        {
-            songEnded = true;
-            ShowFinalScore();
-            return;
-        }
-
-        // Handle clicks/taps
         if (Input.GetMouseButtonDown(0))
-        {
             CheckTiming();
-        }
     }
 
     void CheckTiming()
     {
-        if (!audioManager.GetComponent<AudioSource>().isPlaying)
+        if (songEnded) return;
+
+        AudioSource src = audioManager.GetComponent<AudioSource>();
+        if (!src.isPlaying) return;
+
+        float songPosition = audioManager.GetAccurateSongTime();
+        float beatInterval = 60f / audioManager.BPM;
+
+        int currentBeatIndex = Mathf.FloorToInt(songPosition / beatInterval);
+        if (currentBeatIndex == lastBeatIndex)
             return;
 
-        // Latency compensation (~100ms earlier)
-        float offset = -0.10f;
-        float songPosition = audioManager.GetAccurateSongTime() + offset;
+        lastBeatIndex = currentBeatIndex;
 
-        float beatInterval = 60f / audioManager.BPM;
         float nearestBeatTime = Mathf.Round(songPosition / beatInterval) * beatInterval;
         float delta = Mathf.Abs(songPosition - nearestBeatTime);
 
         string feedback;
-        int points = 0;
+        int points;
 
-        if (delta <= 0.10f)
+        if (delta <= 0.07f)
         {
-            feedback = "🎯 Perfect!";
+            feedback = "Perfect!";
             perfectCount++;
             points = 100;
         }
-        else if (delta <= 0.22f)
+        else if (delta <= 0.15f)
         {
-            feedback = "👍 Good!";
+            feedback = "Good!";
             goodCount++;
             points = 50;
         }
         else
         {
-            feedback = "❌ Miss!";
+            feedback = "Miss!";
             missCount++;
             points = 0;
         }
 
         totalScore += points;
 
-        Debug.Log(feedback);
-        if (feedbackUI != null)
-            feedbackUI.ShowFeedback(feedback);
+        // Display running count (e.g., "3 Perfect!")
+        int currentCount =
+            feedback == "Perfect!" ? perfectCount :
+            feedback == "Good!" ? goodCount :
+            missCount;
+
+        string countedFeedback = $"{currentCount} {feedback}";
+        feedbackUI?.ShowFeedback(countedFeedback);
     }
 
-    void ShowFinalScore()
+    // Triggered when AudioManager signals the music has ended
+    private void HandleMusicEnded()
     {
-        string result = $"🏁 Game Over!\n\n" +
-                        $"🎯 Perfect: {perfectCount}\n" +
-                        $"👍 Good: {goodCount}\n" +
-                        $"❌ Miss: {missCount}\n\n" +
-                        $"🏆 Final Score: {totalScore}";
+        if (songEnded) return;
+        songEnded = true;
 
-        Debug.Log(result);
+        StartCoroutine(DelayedFinalScore());
+    }
 
-        if (feedbackUI != null)
-            feedbackUI.ShowFeedback(result, true); // Show full summary
+    private IEnumerator DelayedFinalScore()
+    {
+        // Delay before showing the final results
+        yield return new WaitForSeconds(3f);
+        ShowFinalScore();
+    }
+
+    public void ShowFinalScore()
+    {
+        Debug.Log("Game Over — starting count-up animation.");
+
+        // Trigger the smooth count-up display for the final score
+        StartCoroutine(feedbackUI.CountUpFinalScore(
+            perfectCount,
+            goodCount,
+            missCount,
+            totalScore
+        ));
     }
 }
