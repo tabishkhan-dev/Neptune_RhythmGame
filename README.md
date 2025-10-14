@@ -14,7 +14,6 @@ Scoring summary display at game end.
 ---
 
 ## Unity Project Details
-| Parameter | Value |
 
 **Unity Version** 6000.0.47f1 (Unity 6 LTS) |
 **Render Pipeline** Universal Render Pipeline (URP) |
