@@ -38,10 +38,10 @@ The project follows a **modular architecture** with separated responsibilities:
 
 ## Gameplay Summary
 - Click or tap **in rhythm** with the song’s beats.  
-- Timing is judged as:
-  - **Perfect:** ±100 ms  
-  -  **Good:** ±220 ms  
-  - **Miss:** >220 ms  
+-Timing is judged as:
+- Perfect: ±70 ms  
+- Good: ±150 ms  
+- Miss: >150 ms 
 - At the end of the track, a **score summary** appears showing performance.
 
 ---
@@ -52,9 +52,7 @@ The project follows a **modular architecture** with separated responsibilities:
 3. Press **Play** in the Editor.  
 4. Tap/click to the beat!  
 
-##  Notes & Improvements
-- The BPM is fixed at **120** for simplicity.  
-- Latency compensation of **–100 ms** ensures realistic PC response.  
+##  Improvements  
 - Possible future improvements:
   - Waveform-based beat detection.  
   - Visual hit effects & combo counter.  
@@ -66,9 +64,6 @@ The project follows a **modular architecture** with separated responsibilities:
 ## Author
 **Tabish Khan**  
 M.Sc. Media Engineering, TU Ilmenau  
-Focus: Interactive Audio & XR Systems
 
 ---
 
-##  License
-This project is for educational and evaluation purposes only.
