@@ -3,8 +3,10 @@ using System.Collections;
 
 public class InputHandler : MonoBehaviour
 {
+    [Header("References")]
     public AudioManager audioManager;
     public FeedbackUI feedbackUI;
+   
 
     private int perfectCount = 0;
     private int goodCount = 0;
@@ -48,6 +50,7 @@ public class InputHandler : MonoBehaviour
         string feedback;
         int points;
 
+        // Determine accuracy
         if (delta <= 0.07f)
         {
             feedback = "Perfect!";
@@ -76,7 +79,10 @@ public class InputHandler : MonoBehaviour
             missCount;
 
         string countedFeedback = $"{currentCount} {feedback}";
+
+        // Update UI feedback
         feedbackUI?.ShowFeedback(countedFeedback);
+
     }
 
     // Triggered when AudioManager signals the music has ended
@@ -90,7 +96,7 @@ public class InputHandler : MonoBehaviour
 
     private IEnumerator DelayedFinalScore()
     {
-        // Delay before showing the final results
+        // Short delay before showing final results
         yield return new WaitForSeconds(3f);
         ShowFinalScore();
     }
@@ -99,7 +105,7 @@ public class InputHandler : MonoBehaviour
     {
         Debug.Log("Game Over — starting count-up animation.");
 
-        // Trigger the smooth count-up display for the final score
+        // Smoothly count up and show final score
         StartCoroutine(feedbackUI.CountUpFinalScore(
             perfectCount,
             goodCount,
