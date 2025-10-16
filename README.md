@@ -68,5 +68,3 @@ Focus: Interactive Audio & XR Systems
 
 ---
 
-##  License
-This project is for educational and evaluation purposes only.
