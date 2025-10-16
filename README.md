@@ -64,7 +64,6 @@ The project follows a **modular architecture** with separated responsibilities:
 ## Author
 **Tabish Khan**  
 M.Sc. Media Engineering, TU Ilmenau  
-Focus: Interactive Audio & XR Systems
 
 ---
 
